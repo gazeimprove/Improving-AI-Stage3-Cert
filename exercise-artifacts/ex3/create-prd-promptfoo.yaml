@@ -1,0 +1,147 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: Evaluation of create-prd against the manual PRD test cases
+
+# Define the prompt under test. The product description is supplied by each test case.
+prompts:
+  - |
+    # Create PRD
+
+    ## Role 
+    You have good knowledge of functional and non-functional requirements of software applications.
+    You have good technical and business knowledge to formulate a well-rounded PRD document.
+
+    ## Task
+    Given a product description, create a comprehensive PRD document.
+    Given a feature, create functional and non-functional requirements, as applicable.
+
+    ## Context
+    You know about the target users, their needs, and their pain points.
+    You may have some gaps in your knowledge or the business domain, which you need to fill in or mark as open questions.
+
+    ## Constraints
+    The PRD document should have Product Description, Functional Requirements, Non-Functional Requirements, and Open Questions
+    The PRD should have user personas.
+    The PRD should not have vague qualifiers like "good", "bad", "fast", etc.
+    The PRD should have measurable and testable requirements.
+    The PRD should contain any software/hardware/third-party/system/infrastructure dependencies.
+    The PRD should not contain any implementation details or User interface specifications such as buttons, forms, colors etc.
+
+    Product description:
+    {{product_description}}
+
+    ## Output Format
+    The response itself is the PRD that Promptfoo will evaluate.
+    Do not create, save, or edit a file.
+    Do not invoke tools or skills.
+    Do not ask questions expecting a response.
+    Make reasonable assumptions and document them in Open Questions.
+    Do not describe what you plan to do.
+    Return the complete PRD directly in your response.
+
+# Use a provider label for llm-rubric grading, matching the root configuration pattern.
+defaultTest:
+  options:
+    provider: 'SWE 2'
+
+providers:
+  - id: 'file://../../devinProvider.js'
+    label: 'SWE 2'
+    config:
+      model: 'SWE-2'
+ 
+  - id: 'file://../../devinProvider.js'
+    label: 'GPT 5.6'
+    config:
+      model: 'GPT-5.6 Luna'
+
+tests:
+  - description: Primary app goal
+    vars:
+      product_description: |
+        Write a product requirements document for a Pomodoro timer application with 25-minute work intervals, 5-minute break intervals, session tracking, and a weekly productivity heat map.
+    assert:
+      - type: llm-rubric
+        value: The PRD identifies target-user persona(s), intended audience for the application.
+      - type: llm-rubric
+        value: The PRD explicitly defines the primary goal of the application as helping users improve focus or productivity through timed work and break sessions.
+      - type: llm-rubric
+        value: The PRD explains a concrete benefit the application provides to its target users.
+      - type: llm-rubric
+        value: The PRD contains clearly labeled sections for open questions, assumptions, or unresolved uncertainties, functional and non-functional requirements.
+      - type: llm-rubric
+        value: The PRD does not prescribe UI layout, color schemes, typography, or other design-specific details as requirements.
+      - type: llm-rubric
+        value: The PRD explicitly identifies at least one named item that is out of scope for V1.
+
+  - description: Notification specifications
+    vars:
+      product_description: |
+        Write a product requirements document for a Pomodoro timer application with 25-minute work intervals, 5-minute break intervals, session tracking, and a weekly productivity heat map. 
+        Notifications should be explained in detail.
+    assert:
+      - type: llm-rubric
+        value: The PRD explicitly states whether notifications are visual, audible, or both, and addresses user controls to disable or customize them.
+      - type: llm-rubric
+        value: The PRD lists notification scenarios including work-interval start or end and at least one reminder or error scenario.
+      - type: llm-rubric
+        value: The PRD addresses browser, device, or platform constraints affecting notification delivery, including permission or background-tab behavior.
+      - type: llm-rubric
+        value: The PRD does not merely say notifications should be supported; it specifies a concrete notification type and delivery behavior.
+
+  - description: DateTime and timer handling
+    vars:
+      product_description: |
+        Write a product requirements document for a Pomodoro timer application with 25-minute work intervals, 5-minute 
+        break intervals, session tracking, and a weekly productivity heat map. 
+        Datetime and timer handling should be explained in detail.
+    assert:
+      - type: llm-rubric
+        value: The PRD defines timer accuracy and precision with a measurable tolerance, including the requirement that a 25-minute or 5-minute interval ends within a specified time window (for example +-5 milliseconds) of its intended duration.
+      - type: llm-rubric
+        value: The PRD includes sections on handling timer drift when the page is backgrounded or the user returns to it or in other cases that affect timer accuracy.
+      - type: llm-rubric
+        value: The PRD includes a section to address behavior for timezone changes and device clock changes, including how recorded times or interval completion are handled.
+      - type: llm-rubric
+        value: The PRD includes measurable acceptance criteria rather than only describing the timer as accurate, reliable, or precise.
+      - type: llm-rubric
+        value: The PRD does not rely only on vague words such as accurate, fast, or reliable without a numeric threshold or test procedure.
+
+  - description: Data storage
+    vars:
+      product_description: |
+        Write a product requirements document for a Pomodoro timer application with 25-minute work intervals, 5-minute 
+        break intervals, session tracking, and a weekly productivity heat map. 
+        Data storage needs and types such as where and whether session history, user preferences, and analytics data should be stored should be explained in detail.
+    assert:
+      - type: llm-rubric
+        value: The PRD explicitly chooses local browser storage or cloud storage and names the storage technology or service where appropriate.
+      - type: llm-rubric
+        value: The PRD lists the data fields stored for completed work and break sessions, such as start time, end time, duration, session type, and completion status.
+      - type: llm-rubric
+        value: The PRD specifies a measurable response-time target for saving or retrieving stored session data.
+      - type: llm-rubric
+        value: The PRD explains how stored data supports daily, weekly, and historical querying or analysis.
+      - type: llm-rubric
+        value: The PRD contains concrete data-storage specifications rather than only saying that session history will be saved.
+
+  - description: Dependencies
+    vars:
+      product_description: |
+        Write a product requirements document for a Pomodoro timer application with 25-minute work intervals, 5-minute 
+        break intervals, session tracking, and a weekly productivity heat map. 
+        Datetime and timer handling should be explained in detail.
+    assert:
+      - type: llm-rubric
+        value: The PRD identifies the software dependencies required for the application to function, such as supported browsers and relevant browser APIs, or explicitly states that none are required.
+      - type: llm-rubric
+        value: The PRD identifies third-party services or APIs that the application integrates with, or explicitly states that no third-party service is required for V1.
+      - type: llm-rubric
+        value: The PRD specifies hardware or device requirements and interactions, or explicitly states that no special hardware is required.
+      - type: llm-rubric
+        value: The PRD addresses browser and device compatibility as a dependency or constraint.
+      - type: llm-rubric
+        value: The PRD does not leave dependencies unspecified; it provides an explicit dependency inventory or explicit absence statement.
+
+# Record Sonnet and Haiku baseline scores here after running:
+# promptfoo eval -c create-prd-promptfoo.yaml --no-cache
+outputPath: results.html

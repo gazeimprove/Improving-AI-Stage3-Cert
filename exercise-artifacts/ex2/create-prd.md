@@ -21,3 +21,6 @@ The PRD should not have vague qualifiers like "good", "bad", "fast", etc.
 The PRD should have measurable and testable requirements.
 The PRD should contain any software/hardware/3rd party/system/infrastructure dependencies
 The PRD should not contain any implementation details or detailed design specifications
+
+Product description:
+{{product_description}}

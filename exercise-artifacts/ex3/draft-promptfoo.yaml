@@ -1,0 +1,67 @@
+
+providers:
+  - id: 'exec: node devin.js'
+    label: 'Devin Sonnet'
+    config:
+      model: 'claude-sonnet-5'
+  - id: 'exec: node devin.js'
+    label: 'Devin Haiku'
+    config:
+      model: 'claude-haiku-4.5'
+
+
+
+      
+  - description: DateTime and timer handling
+    vars:
+      product_description: |
+        A Pomodoro timer with 25-minute work intervals and 5-minute break intervals.
+        The timer should go off within one minute of the intended duration, handle timezone
+        changes and device clock changes, and handle cases where the user navigates away from
+        the page and returns.
+    assert:
+      - type: llm-rubric
+        value: The PRD defines timer accuracy and precision with a measurable tolerance, including the requirement that a 25-minute or 5-minute interval ends within 60 seconds of its intended duration.
+      - type: llm-rubric
+        value: The PRD includes a measurable, testable method for detecting or handling timer drift when the page is backgrounded or the user returns to it.
+      - type: llm-rubric
+        value: The PRD includes measurable, testable behavior for timezone changes and device clock changes, including how recorded times or interval completion are handled.
+      - type: llm-rubric
+        value: The PRD includes measurable acceptance criteria rather than only describing the timer as accurate, reliable, or precise.
+      - type: llm-rubric
+        value: The PRD does not rely only on vague words such as accurate, fast, or reliable without a numeric threshold or test procedure.
+
+  - description: Data storage
+    vars:
+      product_description: |
+        A browser-based Pomodoro application that stores completed work sessions and break
+        sessions, which should be accessible for querying and analysis daily, weekly, or for
+        historical data analysis.
+    assert:
+      - type: llm-rubric
+        value: The PRD explicitly chooses local browser storage or cloud storage and names the storage technology or service where appropriate.
+      - type: llm-rubric
+        value: The PRD lists the data fields stored for completed work and break sessions, such as start time, end time, duration, session type, and completion status.
+      - type: llm-rubric
+        value: The PRD specifies a measurable response-time target for saving or retrieving stored session data.
+      - type: llm-rubric
+        value: The PRD explains how stored data supports daily, weekly, and historical querying or analysis.
+      - type: llm-rubric
+        value: The PRD contains concrete data-storage specifications rather than only saying that session history will be saved.
+
+  - description: Dependencies
+    vars:
+      product_description: |
+        A browser-based Pomodoro application that works across different browsers and devices,
+        and integrates with third-party services or APIs if needed for improved functionality.
+    assert:
+      - type: llm-rubric
+        value: The PRD identifies the software dependencies required for the application to function, such as supported browsers and relevant browser APIs, or explicitly states that none are required.
+      - type: llm-rubric
+        value: The PRD identifies third-party services or APIs that the application integrates with, or explicitly states that no third-party service is required for V1.
+      - type: llm-rubric
+        value: The PRD specifies hardware or device requirements and interactions, or explicitly states that no special hardware is required.
+      - type: llm-rubric
+        value: The PRD addresses browser and device compatibility as a dependency or constraint.
+      - type: llm-rubric
+        value: The PRD does not leave dependencies unspecified; it provides an explicit dependency inventory or explicit absence statement.
